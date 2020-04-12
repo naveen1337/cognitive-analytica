@@ -26,15 +26,15 @@ for index,rec in df.iterrows():
 # MongoDB connection
 client = MongoClient(os.getenv("DB_URI"))
 
-db = client['cadb']
-collection = db['cascore']
+db = client['ca_db']
+collection = db['ca_scores']
 
 data = newdf.to_dict()
 row = newdf.index.values.tolist()
 for key in row:
   newobj = {
             'name':key,
-            'similar':data[key]
+            'similar':[data[key]]
             } 
   rec_id = collection.insert_one(newobj).inserted_id 
   print(rec_id)         
