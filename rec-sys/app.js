@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const dotenv = require('dotenv').config
+const dotenv = require('dotenv').config()
 const model = require('./model')
 
 const app = express()
@@ -31,7 +31,21 @@ app.route('/',(req,res)=>{
 app.get('/item/:productname',(req,res)=>{
 	query = req.params.productname
 	model.find({"name":query},(err,result)=>{
-		err ? res.json(err) : res.json(result)
+		if(err){
+			res.json(err)
+		}
+		else{
+			raw_data = result[0]['similar'][0]
+
+			var sortable = [];
+			for (var value of Object.keys(raw_data)) {
+  				  sortable.push([value, raw_data[value]]);
+				}
+			similar = sortable.sort(function(a, b) {
+	 			   return a[1] - b[1];
+			});
+			res.json({similar})
+		}
 	})
 })
 
